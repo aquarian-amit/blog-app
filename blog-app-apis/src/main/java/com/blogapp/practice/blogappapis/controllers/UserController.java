@@ -2,11 +2,10 @@ package com.blogapp.practice.blogappapis.controllers;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blogapp.practice.blogappapis.payloads.ApiResponse;
 import com.blogapp.practice.blogappapis.payloads.UserDto;
 import com.blogapp.practice.blogappapis.services.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
@@ -42,6 +43,7 @@ public class UserController {
 		return ResponseEntity.ok(updateUserDto);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<ApiResponse> deleteUser(@PathVariable("userId") Integer userId) {
 		this.userService.deleteUser(userId);
